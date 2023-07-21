@@ -1,0 +1,23 @@
+
+var express = require('express');
+
+var router = express.Router();
+
+var database = require('../database');
+
+router.get("/", function(request, response, next){
+
+//console.log(request.session);
+
+	
+		response.render('headerr');
+
+	});
+	
+
+
+
+module.exports = router;
+
+
+

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <title>Country State City Dependent Dropdown in Node js</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center text-primary mt-3 mb-3">Dynamic Dropdown Select Box in Node.js</h1>
+
+            <div class="card">
+                <div class="card-header">Dynamic Dropdown</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <select name="country" id="country" class="form-control">
+                            <option value="">Select Country</option>
+                            <% for(var count = 0; count < country_data.length; count++) { %>
+
+                            <option value="<%= country_data[count].country %>"><%= country_data[count].country %></option>
+
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <select name="state" id="state" class="form-control">
+                            <option value="">Select State</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <select name="city" id="city" class="form-control">
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+
+function _(element)
+{
+    return document.getElementById(element);
+}
+
+function fetch_data(parent_element, child_element, type)
+{
+    fetch('country/get_data?type='+type+'&parent_value='+parent_element.value+'').then(function(response){
+        return response.json();
+    }).then(function(responseData){
+
+        var html = '';
+
+        if(type == 'load_state')
+        {
+            html = '<option value="">Select State</option>';
+        }
+
+        if(type == 'load_city')
+        {
+            html = '<option value="">Select City</option>';
+        }
+
+        for(var count = 0; count < responseData.length; count++)
+        {
+            html += '<option value="'+responseData[count]+'">'+responseData[count]+'</option>';
+        }
+
+        child_element.innerHTML = html;
+    });
+}
+
+_('country').onchange = function(){
+
+    fetch_data(_('country'), _('state'), 'load_state');
+
+};
+
+_('state').onchange = function(){
+
+    fetch_data(_('state'), _('city'), 'load_city');
+
+};
+
+
+
+</script>

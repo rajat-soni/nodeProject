@@ -1,0 +1,149 @@
+<% if(!session.user_name){ %>
+    <script type = "text/javascript">
+window.location = "/logout";
+
+       </script>     
+<% } %>
+
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Mirrored from www.wrraptheme.com/templates/luno/inventory/app-tasks.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 22 Feb 2023 23:37:59 GMT -->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <link rel="icon" href="https://www.wrraptheme.com/templates/luno/assets/img/favicon.ico" type="image/x-icon">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+ <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+
+ 
+
+
+        <title></title>
+        
+       
+        <script src="../assets/js/plugins.js"></script>
+       
+        
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+         
+
+        
+      
+    </head>
+    <body class="layout-1" data-luno="theme-blue">
+
+       
+     <%- include('header',{session:session}); -%> 
+       
+     
+          
+     
+        <button type="button" id="add_data" class="btn btn-success btn-md ">Add New Sender</button>
+       
+        
+        <div class="container-fluid">
+            <div class="row g-3">
+                <div class="col-12">
+                 
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="task_all" role="tabpanel">
+                            <div class="d-flex justify-content-between mb-2">
+                                <br>
+                                <button class="btn btn-sm d-block d-lg-none btn-primary task-list-toggle" type="button"><i class="fa fa-bars"></i></button>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <table id = "table_data"  class="table table-striped  table-hover " >
+                                        <thead class = "bg-dark text-light ">
+                                            <p id = "message"></p>
+                                            <tr>
+                                                <th class="text-light"  >Sender Name</th>
+                                                <th class="text-light">Sender Email</th>
+
+
+                                                <th class="text-light">Action</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody >
+                                            <div class="d-flex align-items-center">
+                                            <tr>
+
+                                            </tr>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                           
+                 
+     
+                            
+                           
+        
+            </div>
+        </div>
+        
+       
+        <div class="modal" tabindex="-1" id="action_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="sample_form">
+                        <div class="modal-header" id="dynamic_modal_title">
+                            <h5 class="modal-title"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3"><label class="form-label">Sender Name</label>
+                                <input type="text" name="sender_name" id="sender_name" class="form-control readA"  placeholder = "Sender Name" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sender Email</label>
+                                <input type = "email"   id="sender_email" name = "sender_email"  placeholder = "Sender Email" required class="form-control readA">
+                          
+                            </div>
+                          
+                            <div class="mb-3">
+                                <label class="form-label">Client Id</label>
+                                <select class="form-control readA" id = client_id name = "client_id">
+                                    <option selected>Choose value</option>
+                                <% querysender.forEach(function(item){ %>
+                                    
+                                   
+                               <option value = "<%= item.client_id %>"> <%= item.client_name %> </option>
+                                <% }) %>
+                            </select>
+                          
+                            </div>
+                             
+                        </div>
+                        <div class="modal-footer"><input type="hidden" name="sender_id" id="sender_id"  />
+                            <input type="hidden" name="action"    id="action" value="Add" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="action_button">Add New sender</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+      
+        
+
+
+       <script src= "../javascripts/sender.js"></script>  
+      
+       <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+       <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+       
+ 
+       
+         <%- include('footer') -%>
+
+    </body>
+</html>
+

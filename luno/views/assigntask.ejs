@@ -1,0 +1,490 @@
+<% if(!session.user_name){ %>
+  <script type="text/javascript">
+    window.location = "/logout";
+
+  </script>
+  <% } %>
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <!-- Mirrored from www.wrraptheme.com/templates/luno/inventory/app-tasks.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 22 Feb 2023 23:37:59 GMT -->
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="icon" href="https://www.wrraptheme.com/templates/luno/assets/img/favicon.ico" type="image/x-icon">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+
+
+
+
+      <title></title>
+      <style>
+        table tr td {
+
+          font-size: 12px;
+        }
+
+
+        td {
+          border-right: none !important;
+          border-left: none !important;
+        }
+
+        th {
+          width: 20% !important;
+        }
+
+        table.dataTable {
+          white-space: normal;
+        }
+      </style>
+
+
+
+
+
+      <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+
+
+    </head>
+
+    <body class="layout-1" data-luno="theme-blue">
+
+
+      <%- include('header',{session:session}); -%>
+
+
+
+
+
+
+
+        <div class="container-fluid">
+          <div class="row g-3">
+            <div class="col-12">
+
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="task_all" role="tabpanel">
+                  <div class="d-flex justify-content-between mb-2">
+                    <br>
+                    <button class="btn btn-sm d-block d-lg-none btn-primary task-list-toggle" type="button"><i
+                        class="fa fa-bars"></i></button>
+                  </div>
+                  <div class="card">
+                    <div class="card-body">
+                      <table id="table_data" class="table table-striped  table-hover"
+                        style="white-space: normal !important;">
+                        <thead class="bg-dark text-light ">
+                          <p id="message"></p>
+                          <tr>
+                            
+                            <th class="text-light">Campaign Name</th>
+                            <th class="text-light">E-Blast Date</th>
+                            <th class="text-light">Reminder Blast Date</th>
+                            <th class="text-light">Assigned To</th>
+                            <th class="text-light">Status</th>
+                            <th class="text-light">Action</th>
+                          </tr>
+
+                        </thead>
+
+                        <tbody>
+                          <div class="d-flex align-items-center">
+                            <tr>
+
+                            </tr>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+
+
+
+
+
+                </div>
+              </div>
+
+
+              <div class="modal" tabindex="-1" id="action_modal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <form method="post" id="sample_form">
+                      <div class="modal-header" id="dynamic_modal_title">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+
+                        <div id="editdataa">
+                          <div class="mb-3">
+                            <label class="form-label">Campaign Name</label>
+
+                            <select class="form-select" id=camp_id name="camp_id">
+                              <option>--Select--</option>
+                              <% querycampaign.forEach(function(c){ %>
+
+                                <option value="<%= c.camp_name  %>">
+                                  <%= c.camp_name %>
+                                </option>
+                                <% }) %>
+                            </select>
+
+
+                          </div>
+
+
+
+                          <div class="mb-3">
+                            <label class="form-label">Blast Type</label>
+                            <select name="blst_type" id="blst_type" class="form-select"
+                              aria-label="Default select example">
+                              <option>--Select--</option>
+                              <option value="Email Blast">Email Blast</option>
+                              <option value="Reminder Blast">Reminder Blast</option>
+
+                            </select>
+                          </div>
+
+
+
+                          <div class="mb-3">
+                            <label class="form-label">Allocated To</label>
+                            <select class="form-select" id=user_id name="user_id">
+                              <option>--Select--</option>
+                              <% data.forEach(function(d){ %>
+
+                                <option value="<%= d.user_id  %>">
+                                  <%= d.first_name + " " + d.last_name %>
+                                </option>
+                                <% }) %>
+                            </select>
+                          </div>
+                        </div>
+
+
+
+
+
+
+                 
+                        <div id="viewdata11" style="display:none">
+
+                          <div class="row">
+                            <div class="col-12">
+                              <label class="form-label" style="color:red">Client Name:</label>
+                              <input type="text" name="cnameview" id="cnameview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+
+                            </div>
+
+
+
+                          </div>
+
+
+                          <div class="row">
+                            <div class="col-12">
+
+                              <label class="form-label" style="color:red">Sender Name:</label>
+                              <input type="text" name="sender_nameview" id="sender_nameview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+
+
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                              <label class="form-label" style="color:red">Sender Email:</label>
+                              <input type="text" name="sender_emailview" id="sender_emailview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+
+                            </div>
+                          </div>
+
+
+
+
+                          <hr>
+
+
+                          <div class="row">
+                            <div class="col-12">
+                              <label class="form-label" style="color:red">Campaign Name:</label>
+                              <input type="text" name="camp_nameview" id="camp_nameview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <label class="form-label" style="color:red">Campaign From:</label>
+                              <input type="text" name="camp_fromview" id="camp_fromview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+                            </div>
+
+                          </div>
+
+                          <hr>
+
+
+                          <div class="row">
+                            <div class="col-6">
+                              <label class="form-label" style="color:red">Email Blast Count:</label>
+                              <input type="text" name="blast_countview" id="blast_countview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+                            </div>
+
+
+                            <div class="col-6">
+                              <label class="form-label" style="color:red">Priority:</label>
+                              <input type="text" name="priorityview" id="priorityview"
+                                style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                readonly="readonly">
+                            </div>
+
+                          </div>
+
+
+
+
+
+
+                         
+
+                          <div id="ebasset">
+<hr>
+                            <div class="row">
+                              <div class="col-6">
+                                <label class="form-label" style="color:red">Allocated To:</label>
+                                <input type="text" name="first_nameview" id="first_nameview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                  readonly="readonly">
+                              </div>
+
+
+                              <div class="col-6">
+                                <label class="form-label" style="color:red">Tact:</label>
+                                <input type="text" name="tactview" id="tactview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                  readonly="readonly">
+                              </div>
+
+                            </div>
+                            <div class="row">
+                              <div class="col-12">
+                                <label class="form-label" style="color:red">Email Blast Type:</label>
+                                <input type="text" name="blast_typeview" id="blast_typeview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                  readonly="readonly">
+                              </div>
+
+
+
+
+                            </div>
+
+
+
+
+                            <div class="row">
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">E-Blast Asset Name:</label>
+                                <!-- <input type="text"  name="ebasset_nameview" id="ebasset_nameview" style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;" readonly="readonly"> -->
+                              </div>
+                              <div class="col-12">
+
+                                <textarea name="ebasset_nameview" id="ebasset_nameview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: -webkit-fill-available; resize: none;"
+                                  readonly="readonly"></textarea>
+                              </div>
+
+
+                              <br>
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">E-Blast Asset Link:</label>
+                                <!--  <input  type="text"  name="ebasset_linkview" id="ebasset_linkview"  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;   width: 50% !important;" readonly="readonly" > -->
+                              </div>
+
+
+                              <div class="col-12">
+
+                                <textarea name="ebasset_linkview" id="ebasset_linkview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: -webkit-fill-available; resize: none;"
+                                  readonly="readonly"></textarea>
+                              </div>
+                            </div>
+
+
+                            <div class="row">
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">Blast Date:</label>
+
+                                <input type="text" name="blast_date1view" id="blast_date1view"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;   width: 50% !important;"
+                                  readonly="readonly">
+
+
+                              </div>
+                            </div>
+
+
+                            <div class="row">
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">Blast Time:</label>
+
+                                <input type="text" name="blast_time1view" id="blast_time1view"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;   width: 50% !important;"
+                                  readonly="readonly">
+
+
+                              </div>
+                            </div>
+
+
+                          </div>
+
+
+
+
+                          <div id="rbasset">
+<hr>
+                            <div class="row">
+                              <div class="col-6">
+                                <label class="form-label" style="color:red">RB Allocated To:</label>
+                                <input type="text" name="rbfname" id="rbfname"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                  readonly="readonly">
+                              </div>
+
+
+                              <div class="col-6">
+                                <label class="form-label" style="color:red">Tact:</label>
+                                <input type="text" name="rb_type" id="rb_type"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                  readonly="readonly">
+                              </div>
+
+                            </div>
+
+
+                            <div class="row">
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">Reminder Blast Asset Name:</label>
+                                <!--  <input type="text"  name="rb_assetnameview" id="rb_assetnameview" style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;" readonly="readonly"> -->
+
+
+                              </div>
+
+                              <div class="col-12">
+
+                                <textarea name="rb_assetnameview" id="rb_assetnameview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;width: -webkit-fill-available; resize: none;"
+                                  readonly="readonly"></textarea>
+                              </div>
+
+                              <br>
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">Reminder Blast Asset Link:</label>
+                                <!--  <input  type="text"  name="rb_asset_linkview" id="rb_asset_linkview"  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;   width: 50% !important;" readonly="readonly" > -->
+                              </div>
+
+                              <div class="col-12">
+
+                                <textarea name="rb_asset_linkview" id="rb_asset_linkview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: -webkit-fill-available; resize: none;"
+                                  readonly="readonly"></textarea>
+                              </div>
+
+                            </div>
+
+
+                            <div class="row">
+                              <div class="col-12">
+                                <label class="form-label" style="color:red; ">Reminder Blast Date:</label>
+
+                                <input type="text" name="rb_dateview" id="rb_dateview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;   width: 50% !important;"
+                                  readonly="readonly">
+
+
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-12">
+
+
+                                <label class="form-label" style="color:red; ">Reminder Blast Time:</label> <input
+                                  type="text" name="rb_timeview" id="rb_timeview"
+                                  style="outline: none;outline: none !important; border-top-style: hidden; border-right-style: hidden; border-left-style: hidden;border-bottom-style: hidden;pointer-events: none;    width: 50% !important;"
+                                  readonly="readonly">
+
+
+                              </div>
+                            </div>
+                          </div>
+
+
+
+
+
+
+
+
+
+                        </div>
+
+
+
+
+                      </div>
+                      <div class="modal-footer">
+                        <input type="hidden" name="id" id="id" />
+                        <input type="hidden" name="action" id="action" value="Add" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="action_button">Assign Task</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <script src="../javascripts/assigntask.js"></script>
+              <script src="../assets/js/theme.js"></script>
+
+              <script type="text/javascript"
+                src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+              <script type="text/javascript"
+                src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+              <%- include('footer') -%>
+
+    </body>
+
+    </html>

@@ -1,0 +1,33 @@
+{
+  "name": "luno",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "connect-redis": "^7.0.1",
+    "cookie-parser": "^1.4.6",
+    "debug": "~2.6.9",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "express-session-json": "^0.0.8",
+    "express-validator": "^6.15.0",
+    "http-errors": "~1.6.3",
+    "mongoose": "^7.0.2",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "pagination-component": "^1.1.1",
+    "redis": "^4.6.5",
+    "serve": "^14.2.0",
+    "sweetalert2": "^11.7.12",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
