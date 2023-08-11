@@ -30,9 +30,9 @@
                  render: function (data) {
                      return `
                        
-                     <button type="button" class="btn btn-link btn-sm delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"  data-id=" `+data+` "><i class="fa fa-trash text" style = "font-size:17px; color:black; "></i></button>
-                     <button type="button" class="btn btn-link btn-sm edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"  data-id =" `+data+` "><i class="bi bi-pencil-square text" style = "font-size:17px;color:black; "></i></button>
-                     <button type="button" class="btn btn-link btn-sm view" data-bs-toggle="tooltip" data-bs-placement="top" title="view"  data-id =" `+ data+ ` "><i class='fas fa-eye' style='font-size:17px;  color:black;'></i></button>    
+                     <button type="button" class="btn btn-link btn-sm delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"  data-id=" `+data+` "><i class="fa fa-trash text" style = "font-size:16px; color:black; "></i></button>
+                     <button type="button" class="btn btn-link btn-sm edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"  data-id =" `+data+` "><i class="bi bi-pencil-square text" style = "font-size:16px;color:black; "></i></button>
+                     <button type="button" class="btn btn-link btn-sm view" data-bs-toggle="tooltip" data-bs-placement="top" title="view"  data-id =" `+ data+ ` "><i class='fas fa-eye' style='font-size:16px;  color:black;'></i></button>    
                      `;
                         
                  }
@@ -45,7 +45,7 @@
     });
 
     $('#add_data').click(function() { // for insert the Data //
-
+        $('.readA').prop('readonly', false);
          $('#dynamic_modal_title').text('Add Data');
 
         $('#sample_form')[0].reset();
@@ -53,7 +53,7 @@
        var add =  $('#action').val('Add');
     
 
-        $('#action_button').text('Add');
+       var btn =  $('#action_button').text('Add');
 
         $('#action_modal').modal('show');
 
@@ -70,6 +70,12 @@
          }else{
             $('#action_modal').modal('hide');
          }
+
+         if(btn.text() == 'Add'){
+     
+            $('#action_button').text('Add').show();
+            $('[name]').prop('require', true);
+         }
     
 
     });
@@ -77,7 +83,9 @@
     $('#sample_form').on('submit', function(event) {
 
         event.preventDefault();
-     
+      
+        senderFormValidationCheck();
+        clientIdValidationCheck();
         $.ajax({
             url: "http://localhost:3000/sender/action",
             method: "POST",
@@ -185,7 +193,7 @@
         
           var val = $('#action').val('view');
         
-       var btn =  $('#action_button').text('view');
+       var btn =  $('#action_button').text('view').hide();
         
         $('#action_modal').modal('show');
      
@@ -194,6 +202,7 @@
             $('#action_button').text('view').hide();
         }else{
             $('#action_button').text('Edit').show();
+           
         }
 
         if(text.text() ==  'View Data' ){

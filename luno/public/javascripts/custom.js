@@ -124,14 +124,14 @@ $(document).ready(function() { //  code for fetch Data //
 
 
     $('#add_data').click(function() { // start code  for insert the Data //
-
+        $('.readAll').prop('readonly', false)
         $('#dynamic_modal_title').text('Add Data');
         ``
         $('#sample_form')[0].reset();
 
         var add = $('#action').val('Add');
 
-        $('#action_button').text('Add Form');
+       var btn =  $('#action_button').text('Add Form');
 
         $('#action_modal').modal('show');
 
@@ -158,6 +158,15 @@ $(document).ready(function() { //  code for fetch Data //
             $('#action_modal').modal('hide');
          }
     
+
+         if(btn.text() == 'Add Form'){
+
+            
+     
+            $('#action_button').text('Add').show();
+            $('[name]').prop('require', true);
+         }
+
 
 
     });
@@ -321,7 +330,7 @@ $(document).ready(function() { //  code for fetch Data //
         var user_id = $(this).data('id');
         var text = $('#dynamic_modal_title').text('View Data');
         var all = $('#action').val('view');    
-        var btn =  $('#action_button').text('View Data');
+        var btn =  $('#action_button').text('View Data').hide();
                    $('#action_modal').modal('show');
 
 

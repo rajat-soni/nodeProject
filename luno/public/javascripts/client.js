@@ -30,9 +30,9 @@ $(document).ready(function() { // satart code  for fetch Data //
                 render: function (data) {
                     return `
                       
-                    <button type="button" class="btn btn-link btn-sm delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"  data-id=" `+data+` "><i class="fa fa-trash" style = "font-size:17px;  color:black;"></i></button>
-                    <button type="button" class="btn btn-link btn-sm edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"  data-id =" `+data+` "><i class="bi bi-pencil-square text" style = "font-size:17px; color:black; "></i></button>
-                    <button type="button" class="btn btn-link btn-sm view" data-bs-toggle="tooltip" data-bs-placement="top" title="view"  data-id =" `+ data+ ` "><i class='fas fa-eye text' style='font-size:17px; color:black; '></i></button>    
+                    <button type="button" class="btn btn-link btn-sm delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"  data-id=" `+data+` "><i class="fa fa-trash" style = "font-size:16px;  color:black;"></i></button>
+                    <button type="button" class="btn btn-link btn-sm edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"  data-id =" `+data+` "><i class="bi bi-pencil-square text" style = "font-size:16px; color:black; "></i></button>
+                    <button type="button" class="btn btn-link btn-sm view" data-bs-toggle="tooltip" data-bs-placement="top" title="view"  data-id =" `+ data+ ` "><i class='fas fa-eye text' style='font-size:16px; color:black; '></i></button>    
                         `;
                 }
             }
@@ -94,14 +94,14 @@ $(document).ready(function() { // satart code  for fetch Data //
 
 
     $('#add_data').click(function() { //  start code  for  insert data //
-
+        $('.readAl').prop('readonly', false)
         $('#dynamic_modal_title').text('Add Data');
 
         $('#sample_form')[0].reset();
 
        var add = $('#action').val('Add');
 
-        $('#action_button').text('Add');
+       var btn =  $('#action_button').text('Add');
 
         $('#action_modal').modal('show');
 
@@ -118,9 +118,16 @@ $(document).ready(function() { // satart code  for fetch Data //
          }else{
             $('#action_modal').modal('hide');
          }
-    
+
+         if(btn.text() == 'Add'){
 
 
+     
+            $('#action_button').text('Add').show();
+            $('[name]').prop('require', true);
+         }
+
+            
   
 
     });
@@ -129,6 +136,11 @@ $(document).ready(function() { // satart code  for fetch Data //
 
             event.preventDefault();
 
+              var name = $('#client_name').val();
+        // if(name != ""){
+            
+           
+     
             $.ajax({
                 url: "http://localhost:3000/client/action",
                 method: "POST",
@@ -155,6 +167,16 @@ $(document).ready(function() { // satart code  for fetch Data //
                     
                 }
             });
+        
+
+       
+        // }else{
+        //     $('#message').html('<p class="alert alert-danger">Fields not be Empty. </p>').fadeIn()
+        //     setTimeout(function() {
+        //         $('#message').html('');
+        //     }, 2000);
+            
+        // }    
 
     }); // end code for insert data //  
 
@@ -241,6 +263,7 @@ $(document).ready(function() { // satart code  for fetch Data //
             $('#action_button').text('View').hide();
         }else{
             $('#action_button').text('Edit').show();
+           
         }
 
 
@@ -259,6 +282,7 @@ $(document).ready(function() { // satart code  for fetch Data //
            
           
             }
+
         
         
         $.ajax({

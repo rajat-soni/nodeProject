@@ -22,9 +22,10 @@ router.get("/", function(request, response, next){
     var weektask = "select * from addtask where blast_date <= (current_date + interval 7 day);";
     var clientlist = "SELECT * FROM client_tbl c right join sender_tbl s on c.client_id=s.client_id ";
     var userlist = "SELECT * FROM  user_tbl ORDER BY user_id DESC";
-    var completed = "select * from addtask where status=1 || status=2";
-    var pending = "select * from addtask where blast_date > current_date ;";
-    var missed = "select * FROM `addtask` WHERE DATE_ADD(concat(blast_date, ' ', blast_time),interval 2 hour) < now() && status=0 ";
+    var completed = "select * from addtask where status=1 || rbstatus=1";
+    var missed="select * FROM `addtask` WHERE (DATE_ADD(concat(blast_date, ' ', blast_time),interval 2 hour) < now() && status=0) || (DATE_ADD(concat(rb_date, ' ', rb_time),interval 2 hour) < now() && rbstatus=0)";
+    var pending = "select (select count(*) from addtask where blast_date > current_date ) + (select count(*) from addtask where rb_date > current_date ) as pending";
+
     // var client_id = request.query.client_id;
     // var mysql = require('mysql');
    // var draw = request.query.draw;
