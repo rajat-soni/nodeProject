@@ -21,10 +21,10 @@ router.get("/", function(request, response, next){
     var weektask = "select * from addtask where blast_date <= (current_date + interval 7 day);";
     var clientlist = "SELECT * FROM client_tbl c right join sender_tbl s on c.client_id=s.client_id ";
     var userlist = "SELECT * FROM  user_tbl ORDER BY user_id DESC";
-    var completed = "select * from addtask where status=1 || rbstatus=1";
+    var completed = `select * from addtask where(status=1 AND allocated_to =${user_id}) || (rbstatus=1 and rballocated_to =${user_id})   `;
     var missed=`select * FROM addtask WHERE (DATE_ADD(concat(blast_date, ' ', blast_time),interval 2 hour) < now() && status=0 and allocated_to =${user_id}) || (DATE_ADD(concat(rb_date, ' ', rb_time),interval 2 hour) < now() && rbstatus=0 and rballocated_to =${user_id})`;
     var pending = `select * from addtask where (blast_date > current_date and allocated_to =${user_id} and status=0) || (rb_date > current_date and rballocated_to =${user_id} and rbstatus=0)`;
-    console.log("Pending" +pending);
+    console.log("Pending blast" +pending);
     // var client_id = request.query.client_id;
     // var mysql = require('mysql');
    // var draw = request.query.draw;
@@ -63,6 +63,8 @@ database.query(queryuser, function(error, queryuser){
 });
 
 });
+
+
 
 
 
@@ -134,7 +136,7 @@ console.log("get data query");
                     var user_id = request.session.user_id;
                     var role = request.session.role;
 
-                    const getDate = () => {
+                        const getDate = () => {
                         const newDate = new Date();
                         const year = newDate.getFullYear();
                         const month = newDate.getMonth() + 1;
@@ -153,10 +155,11 @@ console.log("get data query");
 
                         var allocated_to=row.allocated_to;
                         var rballocated_to=row.rballocated_to;
-                       
+                        var user_id = request.session.user_id;
 
                         console.log("EB Allocated To: " +allocated_to);
                         console.log("RB Allocated To: " +rballocated_to);
+                        console.log("User ID: " +user_id);
                        
                         if(allocated_to==rballocated_to)
                         {
@@ -170,6 +173,28 @@ console.log("get data query");
                             
                             var blast_type=row.blast_type;
                         }
+
+                        if( row.rballocated_to === request.session.user_id && row.allocated_to != request.session.user_id)
+                        {
+                            var blast_type="Reminder Blast";
+                            data_arr.push({
+                                'camp_name': row.camp_name,
+                                'asset_name': row.asset_name,
+                                'blast_type': blast_type,
+                                 'status': row.status,
+                                 'allocated_to': row.allocated_to,
+                                 'rballocated_to': row.rballocated_to,
+                                 'rbstatus': row.rbstatus,
+                                 'todaydt': row.todaydt,
+                                 'blast_date': row.blast_date,
+                                 'id': row.id,
+                                 'eblast_datetime': row.eblast_datetime
+    
+    
+                            }); 
+                        }
+
+                        
                         data_arr.push({
                             'camp_name': row.camp_name,
                             'asset_name': row.asset_name,
@@ -200,6 +225,8 @@ console.log("get data query");
                     } else {
 
                     }
+
+                    
                 });
 
                 var output = {

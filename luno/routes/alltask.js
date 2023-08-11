@@ -20,7 +20,7 @@ router.get("/", function(request, response, next){
 
        var query = "select *,a.id as eid,a.id as rbid,u.first_name as ebfname,a.camp_name as campname,CONCAT( a.blast_date ,' | ', a.blast_time) as eblast_date,a.status as ebstatus,CONCAT( a.rb_date ,' | ', a.rb_time) as rblast_date,t3.first_name as rbfname,a.camp_name as rbcampname,a.rbstatus as rb_status,a.rb_type as rbtype from user_tbl u join addtask a on u.user_id=a.allocated_to left join user_tbl t3 on a.rballocated_to=t3.user_id ";
 
-        var query1 = " SELECT *, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='rush' && (CONCAT( blast_date ,' | ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,' | ', rb_time) >= CURRENT_TIMESTAMP)";
+        var query1 = " SELECT *, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='Rush' && (CONCAT( blast_date ,' | ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,' | ', rb_time) >= CURRENT_TIMESTAMP)";
         var query2 = "SELECT * FROM campaign ORDER BY id DESC";
         var query3 = "SELECT * FROM addtask where blast_date=CURDATE()";
         var weektask = "SELECT *, CONCAT( blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)";
@@ -133,7 +133,7 @@ console.log("Edit action button clicked");
         console.log(id);
              var query = `SELECT asset_name AS Data FROM addtask WHERE id = "${id}"`;
  
- console.log("Rajashri Fagare");
+
              // var query = `
              // SELECT asset_name AS Data FROM addtask 
              // WHERE id = '${search_query}'  `;
@@ -217,7 +217,7 @@ router.get('/get_data', function(request, response, next){
     var search_query = `
      AND (camp_name LIKE '%${search_value}%' 
       OR blast_date LIKE '%${search_value}%' 
-      OR tact LIKE '%${search_value}%' 
+     
       OR id LIKE '%${search_value}%'
      )
     `;
@@ -241,15 +241,88 @@ router.get('/get_data', function(request, response, next){
             LIMIT ${start}, ${length}
             `;
 
+
+
             var data_arr = [];
 
             database.query(query, function(error, data){
 
                 data.forEach(function(row){
+
+                    
+const getDate = () => {
+    const newDate = new Date();
+    const year = newDate.getFullYear();
+    const month = newDate.getMonth() + 1;
+    const d = newDate.getDate();
+    
+    return `${year}-${month.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+  }
+  
+  console.log("GetDate" +getDate());
+  console.log("RBStatus" +row.rbstatus);
+  console.log("EBSTatus" +row.status);
+
+
+// if(row.rbstatus=="1")
+// {
+//     var rbstatus= `<span class="bg-success text-light px-1 rounded small">RB-Done</span>`;
+// }
+// else  if(row.rbstatus=="0" && row.rb_date!=""  && getDate() > row.rb_date){
+//     var rbstatus=  `<span class="bg-danger text-light px-1 rounded small">RB-Missed</span>`;
+// }
+// else if(row.rbstatus=="0" && row.rb_date!="" && getDate() < row.rb_date){
+//     var rbstatus= `<span class="bg-info text-light px-1 rounded small">RB-Pending</span>`;
+// }
+// else{
+//     var rbstatus="";
+// }
+
+
+// if(row.status=="1")
+// {
+//     var ebstatus=  `<span class="bg-success text-light px-1 rounded small">EB-Done</span>`;
+//     console.log("Eblast current date 1");
+//     console.log(getDate());
+// }
+// else  if(row.status=="0" && getDate() > row.blast_date){
+//     var ebstatus= `<span class="bg-danger text-light px-1 rounded small">EB-Missed</span>`;
+//     console.log("Eblast current date 2" );
+//     console.log(getDate());
+// }
+// else{
+//     var ebstatus= `<span class="bg-info text-light px-1 rounded small">EB-Pending</span>`;
+//     console.log("Eblast current date 3");
+//     console.log(getDate());
+// }
+
+// var ebrstatus=row.camp_name +  " " + ebstatus+ " " +rbstatus;
+//var status=`row.tact<span class="bg-success text-light px-1 rounded small">Done</span>`;
+
+var priority=row.priority;
+var tact=row.tact;
+
+if(row.rb_assetname!="" && row.rb_assetlink!="")
+{
+    var tact="Email Blast / Reminder Blast"; 
+}
+else{
+    var tact=row.tact;
+}
+if(priority=="Rush"){
+  var camp_name=row.camp_name + " " +`<span class="bg-danger text-light px-1 rounded small">Rush</span>`;
+}
+else{
+    var camp_name=row.camp_name;
+}
+
+
+
                     data_arr.push({
                         'balst_dt' : row.balst_dt,
-                        'camp_name' : row.camp_name,
-                        'tact' : row.tact,
+                        'camp_name' : camp_name,
+                        'tact' : tact,
+                      
                         'status' : row.status,
                         'allocated_to' : row.allocated_to,
                         'blast_date' : row.blast_date,
@@ -321,18 +394,18 @@ router.get('/get_prioritydata', function(request, response, next){
 
     //Total number of records without filtering
 
-    database.query("SELECT COUNT(*) AS Total, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt ,CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='rush' && (CONCAT( blast_date ,' | ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,' | ', rb_time) >= CURRENT_TIMESTAMP) ", function(error, data){
+    database.query("SELECT COUNT(*) AS Total, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt ,CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='Rush' && (CONCAT( blast_date ,'  ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,'  ', rb_time) >= CURRENT_TIMESTAMP) ", function(error, data){
 
         var total_records = data[0].Total;
 
         //Total number of records with filtering
 
-        database.query(`SELECT COUNT(*) AS Total, CONCAT(  blast_date," | ", blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='rush' && (CONCAT( blast_date ,' | ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,' | ', rb_time) >= CURRENT_TIMESTAMP) AND 1 ${search_query}`, function(error, data){
+        database.query(`SELECT COUNT(*) AS Total, CONCAT(  blast_date," | ", blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='Rush' && (CONCAT( blast_date ,'  ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,'  ', rb_time) >= CURRENT_TIMESTAMP) AND 1 ${search_query}`, function(error, data){
 
             var total_records_with_filter = data[0].Total;
 
             var query = `
-            SELECT *, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='rush' && (CONCAT( blast_date ,' | ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,' | ', rb_time) >= CURRENT_TIMESTAMP)  AND 1 ${search_query} 
+            SELECT *, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='Rush' && (CONCAT( blast_date ,'  ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,'  ', rb_time) >= CURRENT_TIMESTAMP)  AND 1 ${search_query} 
             ORDER BY balst_dt,${column_name} ${column_sort_order} 
             LIMIT ${start}, ${length}
             `;
@@ -506,18 +579,18 @@ router.get('/get_weeklytaskdata', function(request, response, next){
 
     //Total number of records without filtering
 
-    database.query("SELECT COUNT(*) AS Total, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt FROM addtask where blast_date <= (current_date + interval 7 day) ", function(error, data){
+    database.query("SELECT COUNT(*) AS Total, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY ", function(error, data){
 
         var total_records = data[0].Total;
 
         //Total number of records with filtering
 
-        database.query(`SELECT COUNT(*) AS Total, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date <= (current_date + interval 7 day) AND 1 ${search_query}`, function(error, data){
+        database.query(`SELECT COUNT(*) AS Total, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY AND 1 ${search_query}`, function(error, data){
 
             var total_records_with_filter = data[0].Total;
 
             var query = `
-            SELECT *, CONCAT( blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) AND 1 ${search_query} 
+            SELECT *, CONCAT( blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY AND 1 ${search_query} 
             ORDER BY ${column_name} ${column_sort_order} 
             LIMIT ${start}, ${length}
             `;
@@ -660,7 +733,7 @@ if(action == 'task_week')
         var rb_assetname = "";
 		var rb_assetlink = "";
         var rb_date	 = "";
-        var rb_time	 = ""	;
+        var rb_time	 = "";
 		var comment = request.body.comment;
 		var priority = request.body.priority;
 		var allocated_to = request.body.allocated_to;
@@ -814,38 +887,69 @@ console.log("Clicked on Edit Button");
 		var priority = request.body.priority;
 		var allocated_to = request.body.allocated_to;
         var cname = cname[0];
-
+if(rb_assetname!="" && rb_asset_link!="")
+{
+    var query = `
+    UPDATE addtask 
+    SET cname = "${cname}", 
+    camp_name = "${camp_name}", 
+    camp_from = "${camp_from}", 
+    blast_count = "${blast_count}", 
+    asset_name = "${asset_name}" ,
+    asset_link = "${asset_link}",
+    rb_type = "${rb_type}" ,
+    rb_assetname = "${rb_assetname}" ,
+    rb_assetlink = "${rb_asset_link}",
+    rb_date = "${rb_date}" ,
+    rb_time = "${rb_time}",
+    rballocated_to="${rballocated_to}",
+    tact = "${tact}",
+    blast_type = "${blast_type}",
+    
+    
+    comment = "${comment}",
+    priority = "${priority}",
+    allocated_to = "${allocated_to}"
+    WHERE id = "${id}"
+    `;
+            
+    console.log("Update Query");
+    console.log(query);
+            database.query(query, function(error, data){
+                response.json({
+                    message : 'Data Edited'
+                });
+            });
+}
    
-		var query = `
-		UPDATE addtask 
-		SET cname = "${cname}", 
-        camp_name = "${camp_name}", 
-		camp_from = "${camp_from}", 
-        blast_count = "${blast_count}", 
-		asset_name = "${asset_name}" ,
-		asset_link = "${asset_link}",
-        rb_type = "${rb_type}" ,
-        rb_assetname = "${rb_assetname}" ,
-		rb_assetlink = "${rb_asset_link}",
-        rb_date = "${rb_date}" ,
-		rb_time = "${rb_time}",
-        rballocated_to="${rballocated_to}",
-		tact = "${tact}",
-		blast_type = "${blast_type}",
-		
-       
-		comment = "${comment}",
-		priority = "${priority}",
-		allocated_to = "${allocated_to}"
-		WHERE id = "${id}"
-		`;
-        console.log("Update Query");
-console.log(query);
-		database.query(query, function(error, data){
-			response.json({
-				message : 'Data Edited'
-			});
-		});
+else{
+    var query = `
+    UPDATE addtask 
+    SET cname = "${cname}", 
+    camp_name = "${camp_name}", 
+    camp_from = "${camp_from}", 
+    blast_count = "${blast_count}", 
+    asset_name = "${asset_name}" ,
+    asset_link = "${asset_link}",
+    
+    tact = "${tact}",
+    blast_type = "${blast_type}",
+    
+    
+    comment = "${comment}",
+    priority = "${priority}",
+    allocated_to = "${allocated_to}"
+    WHERE id = "${id}"
+    `;
+            
+    console.log("Update Query");
+    console.log(query);
+            database.query(query, function(error, data){
+                response.json({
+                    message : 'Data Edited'
+                });
+            });
+}
 
 
 

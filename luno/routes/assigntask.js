@@ -106,6 +106,8 @@ router.get('/get_data', function(request, response, next){
      database.query("SELECT COUNT(*) AS Total ,CONCAT(a.blast_date ,' | ', a.blast_time) AS balst_dt,CONCAT(a.rb_date,' | ',a.rb_time) AS reminderbalst_dt from addtask a left join user_tbl u on a.allocated_to=u.user_id", function(error, data){
  
          var total_records = data[0].Total;
+         console.log("Total Records");
+         console.log(total_records);
  
          //Total number of records with filtering
  
@@ -132,8 +134,8 @@ router.get('/get_data', function(request, response, next){
                     data.forEach(function(row){
                         var rballocated=row.rballocated_to;
                         var eballocated=row.allocated_to;
-console.log("rb alloacted" +rballocated);
-console.log("EB alloacted" +eballocated);
+                        console.log("rb alloacted" +rballocated);
+                        console.log("EB alloacted" +eballocated);
 
 const getDate = () => {
     const newDate = new Date();
@@ -147,29 +149,32 @@ const getDate = () => {
 
 if(row.rb_status=="1")
 {
-    var rb_status=`<span class="bg-success text-light px-1 rounded small">Done</span>`;
+    var rb_status=`<span class="bg-success text-light px-1 rounded small">RB-Done</span>`;
 }
-else  if(row.rb_status=="0" && getDate() > row.rb_date){
-    var rb_status=`<span class="bg-danger text-light px-1 rounded small">Missed</span>`;
+else  if(row.rb_status=="0" && row.rb_date!="" && getDate() > row.rb_date){
+    var rb_status=`<span class="bg-danger text-light px-1 rounded small">RB-Missed</span>`;
+}
+else  if(row.rb_status=="0" && row.rb_date!="" && getDate() < row.rb_date){
+    var rb_status=`<span class="bg-info text-light px-1 rounded small">RB-Pending</span>`;
 }
 else{
-    var rb_status=`<span class="bg-info text-light px-1 rounded small">Pending</span>`;
+    var rb_status=""; 
 }
 
 
 if(row.ebstatus=="1")
 {
-    var ebstatus=`<span class="bg-success text-light px-1 rounded small">Done</span>`;
+    var ebstatus=`<span class="bg-success text-light px-1 rounded small">EB-Done</span>`;
     console.log("Eblast current date 1");
     console.log(getDate());
 }
 else  if(row.ebstatus=="0" && getDate() > row.blast_date){
-    var ebstatus=`<span class="bg-danger text-light px-1 rounded small">Missed</span>`;
+    var ebstatus=`<span class="bg-danger text-light px-1 rounded small">EB-Missed</span>`;
     console.log("Eblast current date 2" );
     console.log(getDate());
 }
 else{
-    var ebstatus=`<span class="bg-info text-light px-1 rounded small">Pending</span>`;
+    var ebstatus=`<span class="bg-info text-light px-1 rounded small">EB-Pending</span>`;
     console.log("Eblast current date 3");
     console.log(getDate());
 }
@@ -180,6 +185,16 @@ if( row.allocated_to == row.rballocated_to)
     var ebstatus=ebstatus+ " " +rb_status;
 }
 else{}
+if(row.rblast_date==" | " )
+{
+var rblast_date="";
+}
+else
+{
+    var rblast_date=row.rblast_date;
+
+} 
+
 
                         if(row.rballocated_to!=row.allocated_to && row.rballocated_to!="")
                         {
@@ -190,7 +205,7 @@ else{}
                                 'status' : rb_status,
                                 'ebfname' : row.rbfname,
                                 'blast_date' : row.blast_date,
-                                'rblast_date' : row.rblast_date,
+                                'rblast_date' : rblast_date,
                                 'blast_type' : row.rb_type,
                                
                                 'id' : row.id
@@ -206,7 +221,7 @@ else{}
                             'ebfname' : row.ebfname,
                             'blast_date' : row.blast_date,
                             'blast_type' : row.blast_type,
-                            'rblast_date' : row.rblast_date,
+                            'rblast_date' : rblast_date,
                             'rb_type' : row.rb_type,
                             'id' : row.id
                         });

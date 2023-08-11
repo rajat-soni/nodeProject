@@ -13,11 +13,22 @@ window.location = "/logout";
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
- <link rel="icon" href="https://www.wrraptheme.com/templates/luno/assets/img/favicon.ico" type="image/x-icon">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
- <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- <link rel="icon" href="https://www.wrraptheme.com/templates/luno/assets/img/favicon.ico" type="image/x-icon"> -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+          crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script><!-- Favicon-->
+        <!-- Jquery Core Js -->
+  
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <!-- Jquery Core Js -->
+  
+       
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
  
 
 
@@ -100,24 +111,31 @@ window.location = "/logout";
                         </div>
                         <div class="modal-body">
                             <div class="mb-3"><label class="form-label">Sender Name</label>
-                                <input type="text" name="sender_name" id="sender_name" class="form-control readA"  placeholder = "Sender Name" required />
+                                <input type="text" name="sender_name" id="sender_name" class="form-control readA"  placeholder = "Sender Name"  />
+                                <div id = "sender_name_error" class="text-danger"></div>
                             </div>
+                            
                             <div class="mb-3">
                                 <label class="form-label">Sender Email</label>
-                                <input type = "email"   id="sender_email" name = "sender_email"  placeholder = "Sender Email" required class="form-control readA">
+                                <input type = "email"   id="sender_email" name = "sender_email"  placeholder = "Sender Email"  class="form-control readA">
+                                <div  id = "email_error" class="text-danger"></div>
                           
                             </div>
-                          
+                           
                             <div class="mb-3">
                                 <label class="form-label">Client Id</label>
+
                                 <select class="form-control readA" id = client_id name = "client_id">
-                                    <option selected>Choose value</option>
+                                    
+                                    <option value="">Please Select</option>
                                 <% querysender.forEach(function(item){ %>
                                     
                                    
                                <option value = "<%= item.client_id %>"> <%= item.client_name %> </option>
                                 <% }) %>
+                                
                             </select>
+                            <div id = "client_id_error" class="text-danger"></div>
                           
                             </div>
                              
@@ -125,7 +143,7 @@ window.location = "/logout";
                         <div class="modal-footer"><input type="hidden" name="sender_id" id="sender_id"  />
                             <input type="hidden" name="action"    id="action" value="Add" />
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="action_button">Add New sender</button>
+                            <button type="submit" class="btn btn-primary btnSave" id="action_button" >Add New sender</button>
                         </div>
                     </form>
                 </div>
@@ -133,9 +151,11 @@ window.location = "/logout";
         </div>  
       
         
-
-
+      
+        <script src="../assets/js/theme.js"></script>
        <script src= "../javascripts/sender.js"></script>  
+       <script src ="../javascripts/senderValidation.js"></script>
+       <script src ="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
       
        <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
        <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>

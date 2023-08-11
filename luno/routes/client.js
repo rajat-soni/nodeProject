@@ -16,15 +16,17 @@ router.get("/", function(request, response, next){
    
     var query = "SELECT * FROM addtask a right join sender_tbl s on a.cname=s.client_id order by date(a.blast_date)desc,a.blast_time desc;";
 
-    var query1 = "SELECT * FROM addtask where priority='rush' order by date(blast_date)asc,blast_time asc";
-    var query2 = "SELECT * FROM campaign ORDER BY id DESC";
-    var query3 = "SELECT * FROM addtask where blast_date=CURDATE()";
-    var weektask = "select * from addtask where blast_date <= (current_date + interval 7 day);";
-    var clientlist = "SELECT * FROM client_tbl c right join sender_tbl s on c.client_id=s.client_id ";
-    var userlist = "SELECT * FROM  user_tbl ORDER BY user_id DESC";
-    var completed = "select * from addtask where status=1 || rbstatus=1";
-    var missed="select * FROM `addtask` WHERE (DATE_ADD(concat(blast_date, ' ', blast_time),interval 2 hour) < now() && status=0) || (DATE_ADD(concat(rb_date, ' ', rb_time),interval 2 hour) < now() && rbstatus=0)";
-    var pending = "select (select count(*) from addtask where blast_date > current_date ) + (select count(*) from addtask where rb_date > current_date ) as pending";
+    var query1 = " SELECT *, CONCAT(  blast_date ,' | ', blast_time) AS balst_dt, CONCAT( rb_date ,' | ', rb_time) AS rb_dt FROM addtask WHERE priority='rush' && (CONCAT( blast_date ,' | ', blast_time) >= CURRENT_TIMESTAMP OR CONCAT( rb_date ,' | ', rb_time) >= CURRENT_TIMESTAMP)";
+        var query2 = "SELECT * FROM campaign ORDER BY id DESC";
+        var query3 = "SELECT * FROM addtask where blast_date=CURDATE()";
+        var weektask = "SELECT *, CONCAT( blast_date ,' | ', blast_time) AS balst_dt FROM addtask WHERE blast_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)";
+        var clientlist = "select *,c.client_id as cid,c.client_name as cname from client_tbl c right join sender_tbl s on c.client_id=s.client_id  ";
+        var userlist = "SELECT * FROM  user_tbl ORDER BY user_id DESC";
+       
+       
+        var completed = "select * from addtask where status=1 || rbstatus=1";
+        var missed="select * FROM `addtask` WHERE (DATE_ADD(concat(blast_date, ' ', blast_time),interval 2 hour) < now() && status=0) || (DATE_ADD(concat(rb_date, ' ', rb_time),interval 2 hour) < now() && rbstatus=0)";
+        var pending = "select (select count(*) from addtask where blast_date > current_date ) + (select count(*) from addtask where rb_date > current_date ) as pending";
 
     // var client_id = request.query.client_id;
     // var mysql = require('mysql');
@@ -48,7 +50,7 @@ router.get("/", function(request, response, next){
       //  database.query(senderlist, function(error, senderlist){
 //console.log(senderlist);
             
-        response.render('client', {title : 'client',data: data,data1: data1,data2: data2,data3: data3,data4: data4,clientlist: clientlist,completed:completed,pending:pending,userlist:userlist,  session:request.session,missed:missed});
+        response.render('client', {title : 'Client Module',data: data,data1: data1,data2: data2,data3: data3,data4: data4,clientlist: clientlist,completed:completed,pending:pending,userlist:userlist,  session:request.session,missed:missed});
        
     });
 

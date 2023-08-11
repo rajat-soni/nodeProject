@@ -58,7 +58,7 @@ $(document).ready(function () {
       <div class="title-text d-flex align-items-center mb-4 mt-1">
         <!-- <h4 class="sidebar-title mb-0 flex-grow-1"><span>XDBS</span></h4> -->
         <!-- <a href="https://xdbsworldwide.com/" class="brand-icon d-flex align-items-center mx-2 mx-sm-3 text-primary"> -->
-          <img src="https://92.204.129.232/lp-db/XDBS-new-logo.png" width="100" style="    margin-left: -3px;" class="logoimg">
+          <img src="https://92.204.129.232/lp-db/XDBS-new-logo.png" width="60" style="    margin-left: -3px;" class="logoimg">
           
         <!-- </a> -->
       </div>
@@ -93,11 +93,11 @@ $(document).ready(function () {
             </a>
             <!-- Menu: Sub menu ul -->
             <ul class="sub-menu collapse show" id="menu-Applications">
-               <li><a class="ms-link <%= (title=='TASK Details')?'active':''; %>" href="../alltask" >Tasks</a></li>
-              <li><a class="ms-link <%= (title=='User Module')?'active':''; %>" href="../newUser">User Module</a></li>
+               <li style="padding-bottom:0px;"><a class="ms-link <%= (title=='Custom Details')?'active':''; %>" href="../customEmp" >Tasks</a></li>
+              <!-- <li><a class="ms-link <%= (title=='User Module')?'active':''; %>" href="../newUser">User Module</a></li>
               <li><a class="ms-link <%= (title=='Sender Module')?'active':''; %>" href="../sender">Sender Module</a></li>
               <li><a class="ms-link <%= (title=='Client Module')?'active':''; %>" href="../client">Client Module</a></li>
-              <li><a class="ms-link <%= (title=='Assigntask Module')?'active':''; %>" href="../assigntask">Assign Task</a></li>
+              <li><a class="ms-link <%= (title=='Assigntask Module')?'active':''; %>" href="../assigntask">Assign Task</a></li> -->
             </ul>
           </li>
 
@@ -204,13 +204,13 @@ $(document).ready(function () {
       
         <div class="row align-items-center">
           <div class="col-auto">
-            <h1 class="fs-5 color-900 mt-1 mb-0">Welcome Back,  <span style="text-transform:capitalize;"><%= session.user_name%> </span>!</h1>
+            <h1 class="fs-5 color-900 mt-1 mb-0">Welcome Back, <span style="text-transform:capitalize;"><%= session.user_name%></span>!</h1>
             
           </div>
           <div class="col d-flex justify-content-lg-end mt-2 mt-md-0">
             <div class="p-2 me-md-3">
               <div><center><span class="h6 mb-0" style="color:#00AC9A;"><%= missed.length %></span> </center></div>
-              <small class="text-muted text-uppercase">Missed Blast   </small>
+              <small class="text-muted text-uppercase">Missed Blast</small>
             </div>
 
             <div class="p-2 me-md-3">
@@ -218,7 +218,7 @@ $(document).ready(function () {
               <small class="text-muted text-uppercase">current Blast   </small>
             </div>
             <div class="p-2 me-md-3">
-              <div><center><span class="h6 mb-0" style="color:#00AC9A;"><% pending.forEach(function(d){ %> <%= d.pending %>    <%  }); %></span> </center></div>
+              <div><center><span class="h6 mb-0" style="color:#00AC9A;"><%= pending.length%>   </span> </center></div>
               <small class="text-muted text-uppercase">Pending Blast</small>
             </div>
             <div class="p-2 pe-lg-0">
@@ -233,6 +233,7 @@ $(document).ready(function () {
 
     <script>
 
+      
 $('.hamburger-icon').click(function(e){
        
        if(e.target.className == 'hamburger-icon'){
@@ -243,15 +244,6 @@ $('.hamburger-icon').click(function(e){
          $('.logoimg').attr('width',"100")
        }
      })
-
-
-
-
-
-
-
-
-
 
       $(function() {
         $('.btn-todo-add').on('click', function() {
